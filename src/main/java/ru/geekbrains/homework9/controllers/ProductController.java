@@ -12,10 +12,11 @@ import ru.geekbrains.homework9.exceptions.ResourceNotFoundException;
 import ru.geekbrains.homework9.services.ProductService;
 
 import javax.validation.constraints.PositiveOrZero;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/products/v1/")
+@RequestMapping("/products/v1")
 @AllArgsConstructor
 @Slf4j
 @Validated
@@ -29,7 +30,7 @@ public class ProductController {
 			@RequestParam(defaultValue = Integer.MAX_VALUE + "") @PositiveOrZero() Integer max,
 			@RequestParam(defaultValue = "1") Integer page) {
 		if (page<1) page=1;
-		return new PageImpl<>(service.findAll(min, max, page).stream().map(ProductDto::new).collect(Collectors.toList()));
+		return service.findAll(min, max, page).map(ProductDto::new);
 	}
 
 	@GetMapping("/{id}")
